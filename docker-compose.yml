@@ -1,0 +1,14 @@
+version: '2'
+services:
+
+  cassandra:
+    image: ghcr.io/ezynook/cassandra/cassandra:latest
+    container_name: cassandra
+    restart: unless-stopped
+    ports:
+      - 7000:7000
+    volumes:
+      - cassandra_data:/opt/cassandra/data
+
+volumes:
+  cassandra_data:
