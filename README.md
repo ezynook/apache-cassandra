@@ -4,7 +4,7 @@
 </div>
 
 # Setting up Cassandra Multi-node Cluster
-<a href="https://github.com/ezynook/apache-cassandra/blob/main/Cluster-Setup.MD">Click Here</a>
+<a href="https://github.com/ezynook/apache-cassandra/blob/main/Cluster-Setup.MD" target="_blank">Click Here</a>
 
 # Setup
 
