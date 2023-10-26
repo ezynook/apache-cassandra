@@ -73,6 +73,109 @@ INSERT INTO test_db.emp JSON '{
   "id" : "829aa84a-4bba-411f-a4fb-38167a987cda",
   "lastname" : "SUTHERLAND" }';
 ```
+# Data Type Supported
 
+| CQL Type  | Constants supported                       |
+|-----------|-------------------------------------------|
+| ascii     | strings                                   |
+| bigint    | integers                                  |
+| blob      | blobs                                     |
+| boolean   | booleans                                  |
+| counter   | integers                                  |
+| date      | strings                                   |
+| decimal   | integers, floats                          |
+| double    | integers, floats                          |
+| float     | integers, floats                          |
+| frozen    | user-defined types,   collections, tuples |
+| inet      | strings                                   |
+| int       | integers                                  |
+| list      | n/a                                       |
+| map       | n/a                                       |
+| set       | n/a                                       |
+| smallint  | integers                                  |
+| text      | strings                                   |
+| time      | strings                                   |
+| timestamp | integers, strings                         |
+| timeuuid  | uuids                                     |
+| tinyint   | integers                                  |
+| tuple     | n/a                                       |
+| uuid      | uuids                                     |
+| varchar   | strings                                   |
+| varint    | integers                                  |
+
+# Using via Python (Pyspark)
+Import Library
+```py
+from pyspark.sql import SparkSession
+from pyspark.sql.types import *
+from pyspark.sql.functions import *
+import pandas as pd
+import pyspark
+import os
+```
+## Spark ENV
+* ('spark.jars.packages','com.datastax.spark:spark-cassandra-connector_2.12:3.1.0')
+
+```py
+os.environ['JAVA_HOME'] = '/usr/local/jdk8u222-b10'
+os.environ['PYSPARK_PYTHON'] ='/HDFS01/miniconda3/envs/pylang39/bin/python'
+conf = pyspark.SparkConf().setAll([
+     ("spark.cassandra.connection.host", "192.168.10.53"),
+     ('spark.jars.packages','com.datastax.spark:spark-cassandra-connector_2.12:3.1.0'),
+     ("spark.cassandra.connection.port", "9042"),
+     ("spark.cassandra.auth.username", "root"),
+     ("spark.cassandra.auth.password", "admin")
+    ])
+spark = SparkSession.builder \
+        .master("local[*]") \
+        .appName("testreplace") \
+        .config(conf=conf) \
+        .enableHiveSupport() \
+        .getOrCreate();
+```
+## Define Schema
+```py
+schema = StructType([
+    StructField("id", IntegerType(), True),
+    StructField("name", StringType(), True)
+])
+```
+## Example Data
+```py
+json = {
+    'id': [1,2,3,4,5,6,7],
+    'name': ['test1','test2','test3','test4','test5','test6','test7']
+}
+df_data = pd.DataFrame(json)
+```
+## Write Data to Cassandra
+```py
+data_rd = spark.createDataFrame(df_data)
+data_rd.write \
+    .format("org.apache.spark.sql.cassandra") \
+    .options(keyspace="test_db", table="emp") \
+    .mode("append") \
+    .save()
+```
+## Read Data
+```py
+cassandra_df = spark.read \
+    .format("org.apache.spark.sql.cassandra") \
+    .options(keyspace="test_db", table="flight") \
+    .load()
+cassandra_df.toPandas()
+```
+## Alternative Write (Optional)
+```py
+cassandra_df.write \
+    .format("org.apache.spark.sql.cassandra") \
+    .options(keyspace="test_db", table="flight") \
+    .mode("append") \
+    .save()
+```
+## Stop Spark Worker
+```py
+spark.stop()
+```
 
 > Source [Apache Cassandra](https://cassandra.apache.org/_/index.html)
