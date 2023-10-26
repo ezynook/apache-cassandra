@@ -25,97 +25,54 @@ $ docker run \
 CONTAINER ID   IMAGE              COMMAND       CREATED             STATUS        PORTS                    NAMES
 f0cc270e1410   ghcr.io/ezynook...  "pasitdev"   1 seconds   1 seconds (healthy)   0.0.0.0:7001->7000/tcp   cassandra
 ```
-
+[Link CQLSH Command](https://docs.datastax.com/en/cql-oss/3.3/cql/cql_reference/cqlReferenceTOC.html)
 # CLI Command
 
 ```docker exec -it cassandra bash```
+# Create Keyspace
+Create a keyspace for a single node evaluation cluster
+```sql
+CREATE KEYSPACE test_db
+  WITH REPLICATION = { 
+   'class' : 'SimpleStrategy', 
+   'replication_factor' : <Number Of Replication> 
+  };
+```
+Create a keyspace NetworkTopologyStrategy on an evaluation cluster
+```sql
+CREATE KEYSPACE test_db 
+  WITH REPLICATION = { 
+   'class' : 'NetworkTopologyStrategy', 
+   'datacenter1' : 1 
+  } ;
+```
 
-CREATE KEYSPACE
+---
+
+# Create Table
 ```sql
-CREATE KEYSPACE “KeySpace Name”
-WITH replication = {'class': ‘Strategy name’, 'replication_factor' : ‘No.Of   replicas’};
+CREATE TABLE test_db.emp (
+   id int, 
+   name text
+   PRIMARY KEY (name, id)) 
+WITH CLUSTERING ORDER BY (id ASC);
 ```
-ALTER KEYSPACE
+# Insert Data
+
+**สามารถใช้งาน SQL Insert, Update, Delete ได้ตามปกติ**
+
+Insert CSV to Table
 ```sql
-ALTER KEYSPACE “KeySpace Name”
-WITH replication = {'class': ‘Strategy name’, 'replication_factor' : ‘No.Of  replicas’};
+COPY keyspace.table FROM '~/testcsv.csv' WITH DELIMITER='|' AND HEADER=TRUE
 ```
-DROP KEYSPACE
+Insert JSON Table
 ```sql
-DROP KEYSPACE “KeySpace name”
-```
-CREATE TABLE
-```sql
-USE test_db;
-CREATE TABLE emp(
-   emp_id int PRIMARY KEY,
-   emp_name text,
-   emp_city text,
-   emp_sal varint,
-   emp_phone varint
-);
-```
-ALTER TABLE
-```sql
-ALTER TABLE emp ADD emp_email text;
-```
-DROP TBALE
-```sql
-DROP TABLE emp;
-```
-CREATE INDEX
-```sql
-CREATE INDEX name ON emp1 (emp_name);
-```
-INSERT DATA
-```sql
-INSERT INTO emp (emp_id, emp_name, emp_city,
-   emp_phone, emp_sal) VALUES(1,'ram', 'Hyderabad', 9848022338, 50000);
-```
-UPDATE DATA
-```sql
- UPDATE emp SET emp_city='Delhi',emp_sal=50000
-   WHERE emp_id=2;
-```
-READ DATA
-```sql
-select * from emp;
-```
-DELETE DATA
-```sql
-DELETE FROM emp WHERE emp_id=3;
-```
-CSV TO ..
-```sql
-COPY keyspace.table FROM 'cyclist_category.csv' WITH DELIMITER='|' AND HEADER=TRUE
-```
-INSERT JSON
-```sql
-INSERT INTO cycling.cyclist_category JSON '{
+INSERT INTO test_db.emp JSON '{
   "category" : "GC", 
   "points" : 780, 
   "id" : "829aa84a-4bba-411f-a4fb-38167a987cda",
   "lastname" : "SUTHERLAND" }';
 ```
-DATATYPE
-```bash
-Data Type	Constants	Description
-ascii	strings	Represents ASCII character string
-bigint	bigint	Represents 64-bit signed long
-blob	blobs	Represents arbitrary bytes
-Boolean	booleans	Represents true or false
-counter	integers	Represents counter column
-decimal	integers, floats	Represents variable-precision decimal
-double	integers	Represents 64-bit IEEE-754 floating point
-float	integers, floats	Represents 32-bit IEEE-754 floating point
-inet	strings	Represents an IP address, IPv4 or IPv6
-int	integers	Represents 32-bit signed int
-text	strings	Represents UTF8 encoded string
-timestamp	integers, strings	Represents a timestamp
-timeuuid	uuids	Represents type 1 UUID
-uuid	uuids	Represents type 1 or type 4
-UUID
-varchar	strings	Represents uTF8 encoded string
-varint	integers	Represents arbitrary-precision integer
-```
+
+
 > Source [Apache Cassandra](https://cassandra.apache.org/_/index.html)
