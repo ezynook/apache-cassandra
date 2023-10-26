@@ -3,6 +3,9 @@
     <h1>Apache Cassandra</h1>
 </div>
 
+# Setting up Cassandra Multi-node Cluster
+<a href="https://github.com/ezynook/apache-cassandra/blob/main/Cluster-Setup.MD">Click Here</a>
+
 # Setup
 
 ```bash
