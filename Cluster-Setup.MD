@@ -115,8 +115,33 @@ systemctl status cassandra
 ## Dead Node Fix
 ```bash
 vim /opt/cassandra/conf/cassandra-env.sh
-#เพื่อคำสั่งนี้บรรทัดสุดท้าย
+#เพิ่มคำสั่งนี้บรรทัดสุดท้าย
 JVM_OPTS="$JVM_OPTS -Dcassandra.replace_address=<Your Host IP Address>"
+```
+## Create Kill proccess script
+Change path to Cassandra
+```bash
+cd /opt/cassandra/bin/kill.sh
+```
+Copy code and paste in ```kill.sh```
+```bash
+#!/bin/bash
+
+APPNAME="cassandra"
+pkill $APPNAME
+
+for ps in $(ps aux | grep $APPNAME | awk '{print $2}'); do
+        kill -9 $ps > dev/null 2>&1
+        echo "Kill $ps Successfully"
+done
+```
+Change execute permission
+```bash
+chmod +x /opt/cassandra/bin/kill.sh
+```
+How to use
+```bash
+$ /opt/cassandra/bin/kill.sh
 ```
 
 > Author: Pasit Y. | Last Writed 20231026
