@@ -143,5 +143,32 @@ How to use
 ```bash
 $ /opt/cassandra/bin/kill.sh
 ```
+## How to add nodes
+* ```ติดตั้ง Java ตาม Step ด้านบนให้เรียบร้อย```
+Rsync Cassandra จากเครื่องก่อนหน้า
+```bash
+ssh root@192.168.10.53 #Master IP
+rsync -avh --progress /opt/cassandra root@ip_address_host_to_join:/opt/
+```
+Config ```vim /opt/cassandra/conf/cassandra.yaml``` ตามด้านล่างนี้
+```yaml
+seed_provider:
+  - class_name: org.apache.cassandra.locator.SimpleSeedProvider
+    parameters:
+      # Ex: "<ip1>,<ip2>,<ip3>"
+      - seeds: "<IP ที่ต้องการเพิ่ม>,192.168.10.53,192.168.10.54"
+
+listen_address: <IP ที่ต้องการเพิ่ม>
+rpc_address: <IP ที่ต้องการเพิ่ม>
+```
+Starting service
+```bash
+/opt/cassandra/bin/cassandra -R
+```
+## Remove Node
+```bash
+ssh root@master_node
+nodetool removenode <host-id>
+```
 
 > Author: Pasit Y. | Last Writed 20231026
