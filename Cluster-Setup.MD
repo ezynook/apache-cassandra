@@ -145,6 +145,7 @@ $ /opt/cassandra/bin/kill.sh
 ```
 ## How to add nodes
 * ```ติดตั้ง Java ตาม Step ด้านบนให้เรียบร้อย```
+
 Rsync Cassandra จากเครื่องก่อนหน้า
 ```bash
 ssh root@192.168.10.53 #Master IP
