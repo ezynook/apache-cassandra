@@ -180,5 +180,7 @@ cassandra_df.write \
 ```py
 spark.stop()
 ```
+## Transfer (Insert, Libraly) Example
+[Python file](https://github.com/ezynook/apache-cassandra/blob/main/Cassandra.ipynb)
 
 > Source [Apache Cassandra](https://cassandra.apache.org/_/index.html)
