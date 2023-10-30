@@ -8,7 +8,6 @@ cat > /etc/hosts <<EOF
 EOF
 ssh-keygen
 ssh-copy-id root@cluster_ip
-ssh-copy-id root@cluster_hostname
 ```
 ## Install OpenJDK
 ```bash
@@ -33,11 +32,16 @@ bash ~/./Miniconda3-py39_23.9.0-0-Linux-x86_64.sh
 /root/miniconda3/bin/conda init
 source ~/.bashrc
 ```
+## Add Username
+```bash
+useradd cassandra
+passwd cassandra
+#-----------------
+#New password Here
+#-----------------
+```
 ## Install Apache Cassandra All hosts
 ```bash
-adduser cassandra
-passwd cassandra
-#New password Here
 cd /opt/
 wget https://dlcdn.apache.org/cassandra/4.1.3/apache-cassandra-4.1.3-bin.tar.gz
 tar zxvf apache-cassandra-4.1.3-bin.tar.gz
@@ -88,23 +92,18 @@ rm -rf /opt/cassandra/data/*
 ```
 ## Script to Start services
 ```bash
-vim /opt/cassandra/bin/cassandra.sh
-#--------------Copy Paste--------------
-sudo -u cassandra /opt/cassandra/bin/cassandra -f
-#--------------------------------------
-chmod +x /opt/cassandra/bin/cassandra.sh
 vim /etc/systemd/system/cassandra.service
 #------------Copy Paste-----------------
 [Unit]
-Description=Apache Cassandra server
+Description=Apache Cassandra database server
 After=network.target
 
 [Service]
 Type=forking
 User=cassandra
 Group=cassandra
-ExecStart=/opt/cassandra/bin/cassandra.sh
-ExecStop=/opt/cassandra/bin/nodetool stop
+ExecStart=/opt/cassandra/bin/cassandra -p /var/run/cassandra/cassandra.pid
+ExecStop=/opt/cassandra/bin/kill.sh
 Restart=on-failure
 
 [Install]
@@ -169,7 +168,9 @@ rpc_address: <IP ที่ต้องการเพิ่ม>
 ```
 Starting service
 ```bash
-sudo -u cassandra /opt/cassandra/bin/cassandra -f
+systemctl daemon-reload
+systemctl start cassandra
+systemctl status cassandra
 ```
 ## Remove Node
 ```bash
@@ -177,4 +178,4 @@ ssh root@master_node
 nodetool removenode <host-id>
 ```
 
-> Author: Pasit Y. | Last Writed 20231026
+> Author: Pasit Y. | Last Writed 20231030
