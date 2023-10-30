@@ -52,6 +52,9 @@ CREATE KEYSPACE test_db
 
 ---
 
+## Transfer (Insert, Library) Example
+[Python file](https://github.com/ezynook/apache-cassandra/blob/main/Cassandra.ipynb)
+
 # Create Table
 ```sql
 CREATE TABLE test_db.emp (
@@ -180,7 +183,5 @@ cassandra_df.write \
 ```py
 spark.stop()
 ```
-## Transfer (Insert, Libraly) Example
-[Python file](https://github.com/ezynook/apache-cassandra/blob/main/Cassandra.ipynb)
 
 > Source [Apache Cassandra](https://cassandra.apache.org/_/index.html)
