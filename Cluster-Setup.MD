@@ -78,6 +78,8 @@ listen_address: 192.168.10.53
 rpc_address: 192.168.10.53
 endpoint_snitch: GossipingPropertyFileSnitch
 auto_bootstrap: true
+write_request_timeout_in_ms: 20000ms
+read_request_timeout_in_ms: 50000ms
 ```
 ## Modify Rack Details
 ```bash
@@ -177,5 +179,24 @@ systemctl status cassandra
 ssh root@master_node
 nodetool removenode <host-id>
 ```
-
+## Error Schema Version failure
+```bash
+#Remove keyspace
+drop keyspace <keyspace_name>;
+#Restart service
+systemctl stop cassandra
+systemctl start cassandra
+#Check host
+nodetool describecluster
+nodetool resetlocalschema #Optional
+#is Normal
+Schema versions:
+		2a0133ac-65e3-3a9f-a60d-0763f2a4d625: [192.168.10.53, 192.168.10.22, 192.168.10.54]
+#Create new keyspace
+CREATE KEYSPACE test_db 
+  WITH REPLICATION = { 
+   'class' : 'NetworkTopologyStrategy', 
+   'datacenter1' : <number of replicas>
+  } ;
+```
 > Author: Pasit Y. | Last Writed 20231030
