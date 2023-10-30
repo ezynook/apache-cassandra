@@ -199,4 +199,51 @@ CREATE KEYSPACE test_db
    'datacenter1' : <number of replicas>
   } ;
 ```
+## User Permission
+Config ```/opt/cassandra/bin/cassandra.yaml```
+```yaml
+authenticator: PasswordAuthenticator
+authorizer: org.apache.cassandra.auth.CassandraAuthorizer
+```
+Restart services all hosts after edit ```systemctl stop cassandra``` | ```systemctl start cassandra```
+
+Create and Grant Users ```cqlsh --request-timeout=10000 -u cassandra -p cassandra```
+```sql
+CREATE USER <some_user> WITH PASSWORD 'password';
+USE <keyspace>;
+GRANT SELECT ON <table_name> TO <some_user>;
+LIST ALL PERMISSIONS OF nook;
+```
+Grant Privillage
+
+* ALL PERMISSIONS
+* ALTER
+* AUTHORIZE
+* CREATE
+* DESCRIBE
+* DROP
+* EXECUTE
+* MODIFY
+* SELECT
+
+source_name
+
+* ALL FUNCTIONS
+* ALL FUNCTIONS IN KEYSPACE keyspace_name
+* FUNCTION function_name
+* ALL KEYSPACES
+* KEYSPACE keyspace_name
+* TABLE table_name
+* ALL MBEANS
+* MBEAN mbean_name
+* MBEANS pattern
+* ALL ROLES
+* ROLE role_name
+
+```sql
+GRANT priviledge
+ON resource_name
+TO role_name
+```
+
 > Author: Pasit Y. | Last Writed 20231030
