@@ -57,7 +57,7 @@ source  /etc/profile
 vim ~/.bashrc
 #-------------Copy Paste--------------------
 alias nodetool='/opt/cassandra/bin/nodetool'
-alias cqlsh='/opt/cassandra/bin/cqlsh'
+alias cqlsh='/opt/cassandra/bin/cqlsh --request-timeout=10000'
 #-------------------------------------------
 source ~/.bashrc
 ```

@@ -46,7 +46,7 @@ Create a keyspace NetworkTopologyStrategy on an evaluation cluster
 CREATE KEYSPACE test_db 
   WITH REPLICATION = { 
    'class' : 'NetworkTopologyStrategy', 
-   'datacenter1' : 1 
+   'datacenter1' : 3
   } ;
 ```
 
