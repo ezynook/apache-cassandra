@@ -24,7 +24,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 #---------------------------------------
 source  /etc/profile
 ```
-# Install Conda
+## Install Conda
 ```bash
 cd ~
 wget https://repo.anaconda.com/miniconda/Miniconda3-py39_23.9.0-0-Linux-x86_64.sh
@@ -33,12 +33,17 @@ bash ~/./Miniconda3-py39_23.9.0-0-Linux-x86_64.sh
 /root/miniconda3/bin/conda init
 source ~/.bashrc
 ```
-# Install Apache Cassandra All hosts
+## Install Apache Cassandra All hosts
 ```bash
+adduser cassandra
+passwd cassandra
+#New password Here
 cd /opt/
 wget https://dlcdn.apache.org/cassandra/4.1.3/apache-cassandra-4.1.3-bin.tar.gz
 tar zxvf apache-cassandra-4.1.3-bin.tar.gz
 mv apache-cassandra-4.1.3 cassandra
+chmod 777 -R cassandra
+chown cassandra:cassandra -R cassandra
 vim /etc/profile
 #-----------Copy Paste--------------
 export CASSANDRA_HOME=/opt/cassandra
@@ -81,11 +86,11 @@ rc=rack1
 ```bash
 rm -rf /opt/cassandra/data/*
 ```
-# Script to Start services
+## Script to Start services
 ```bash
 vim /opt/cassandra/bin/cassandra.sh
 #--------------Copy Paste--------------
-/opt/cassandra/bin/cassandra -R
+sudo -u cassandra /opt/cassandra/bin/cassandra -f
 #--------------------------------------
 chmod +x /opt/cassandra/bin/cassandra.sh
 vim /etc/systemd/system/cassandra.service
@@ -164,7 +169,7 @@ rpc_address: <IP ที่ต้องการเพิ่ม>
 ```
 Starting service
 ```bash
-/opt/cassandra/bin/cassandra -R
+sudo -u cassandra /opt/cassandra/bin/cassandra -f
 ```
 ## Remove Node
 ```bash
