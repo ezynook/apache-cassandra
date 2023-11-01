@@ -78,8 +78,8 @@ listen_address: 192.168.10.53
 rpc_address: 192.168.10.53
 endpoint_snitch: GossipingPropertyFileSnitch
 auto_bootstrap: true
-write_request_timeout_in_ms: 20000ms
-read_request_timeout_in_ms: 50000ms
+write_request_timeout_in_ms: 60000ms
+read_request_timeout_in_ms: 60000ms
 ```
 ## Modify Rack Details
 ```bash
