@@ -11,7 +11,7 @@
 ```bash
 $ cd ~
 $ git clone https://github.com/ezynook/apache-cassandra.git
-$ docker-compose up -d
+$ docker-compose -f docker-compose-webui.yml up -d
 ```
 # One-line Deploy
 ```bash
@@ -33,7 +33,7 @@ f0cc270e1410   ghcr.io/ezynook...  "pasitdev"   1 seconds   1 seconds (healthy) 
 
 ```docker exec -it cassandra bash```
 # Create Keyspace
-Create a keyspace for a single node evaluation cluster
+*แนะนำ* Create a keyspace for a single node evaluation cluster
 ```sql
 CREATE KEYSPACE test_db
   WITH REPLICATION = { 
