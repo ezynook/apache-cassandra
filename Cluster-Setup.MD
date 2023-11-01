@@ -186,18 +186,18 @@ drop keyspace <keyspace_name>;
 #Restart service
 systemctl stop cassandra
 systemctl start cassandra
-#Check host
-nodetool describecluster
-nodetool resetlocalschema #Optional
+#Repair host (Main Node Only)
+nodetool repair --full
+nodetool status
 #is Normal
 Schema versions:
 		2a0133ac-65e3-3a9f-a60d-0763f2a4d625: [192.168.10.53, 192.168.10.22, 192.168.10.54]
 #Create new keyspace
-CREATE KEYSPACE test_db 
+CREATE KEYSPACE test_db
   WITH REPLICATION = { 
-   'class' : 'NetworkTopologyStrategy', 
-   'datacenter1' : <number of replicas>
-  } ;
+   'class' : 'SimpleStrategy', 
+   'replication_factor' : <Number Of Replication> 
+  };
 ```
 ## User Permission
 Config ```/opt/cassandra/bin/cassandra.yaml```
