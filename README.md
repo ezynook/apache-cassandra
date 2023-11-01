@@ -33,7 +33,11 @@ f0cc270e1410   ghcr.io/ezynook...  "pasitdev"   1 seconds   1 seconds (healthy) 
 
 ```docker exec -it cassandra bash```
 # Create Keyspace
-*แนะนำ* Create a keyspace for a single node evaluation cluster
+
+*ให้ใช้คำสั่งกับเครื่อง Node แรกเท่านั้น เนื่องจากจะติด Schema Version*
+
+*Create Table ที่สามารถหลีกเลี่ยงการเกิดปัญหา Schema version fail*
+
 ```sql
 CREATE KEYSPACE test_db
   WITH REPLICATION = { 
@@ -41,7 +45,7 @@ CREATE KEYSPACE test_db
    'replication_factor' : <Number Of Replication> 
   };
 ```
-Create a keyspace NetworkTopologyStrategy on an evaluation cluster
+*การสร้างแบบคุยกันข้าม DC*
 ```sql
 CREATE KEYSPACE test_db 
   WITH REPLICATION = { 
