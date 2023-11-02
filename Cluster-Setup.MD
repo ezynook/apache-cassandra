@@ -11,60 +11,60 @@ ssh-copy-id root@cluster_ip
 ```
 ## Install OpenJDK
 ```bash
-wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u222-b10/OpenJDK8U-jdk_x64_linux_hotspot_8u222b10.tar.gz
-tar -zxvf OpenJDK8U-jdk_x64_linux_hotspot_8u222b10.tar.gz
-chown -R root:root jdk8u222-b10/
-chmod -R 755 jdk8u222-b10/
-mv jdk8u222-b10/ /usr/local/
-vi /etc/profile
+$ wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u222-b10/OpenJDK8U-jdk_x64_linux_hotspot_8u222b10.tar.gz
+$ tar -zxvf OpenJDK8U-jdk_x64_linux_hotspot_8u222b10.tar.gz
+$ chown -R root:root jdk8u222-b10/
+$ chmod -R 755 jdk8u222-b10/
+$ mv jdk8u222-b10/ /usr/local/
+$ vi /etc/profile
 #--------------Copy Paste---------------
 export JAVA_HOME=/usr/local/jdk8u222-b10
 export PATH=$JAVA_HOME/bin:$PATH
 #---------------------------------------
-source  /etc/profile
+$ source  /etc/profile
 ```
 ## Install Conda
 ```bash
-cd ~
-wget https://repo.anaconda.com/miniconda/Miniconda3-py39_23.9.0-0-Linux-x86_64.sh
-chmod +x /Miniconda3-py39_23.9.0-0-Linux-x86_64.sh
-bash ~/./Miniconda3-py39_23.9.0-0-Linux-x86_64.sh
-/root/miniconda3/bin/conda init
-source ~/.bashrc
+$ cd ~
+$ wget https://repo.anaconda.com/miniconda/Miniconda3-py39_23.9.0-0-Linux-x86_64.sh
+$ chmod +x /Miniconda3-py39_23.9.0-0-Linux-x86_64.sh
+$ bash ~/./Miniconda3-py39_23.9.0-0-Linux-x86_64.sh
+$ /root/miniconda3/bin/conda init
+$ source ~/.bashrc
 ```
 ## Add Username
 ```bash
-useradd cassandra
-passwd cassandra
+$ useradd cassandra
+$ passwd cassandra
 #-----------------
 #New password Here
 #-----------------
 ```
 ## Install Apache Cassandra All hosts
 ```bash
-cd /opt/
-wget https://dlcdn.apache.org/cassandra/4.1.3/apache-cassandra-4.1.3-bin.tar.gz
-tar zxvf apache-cassandra-4.1.3-bin.tar.gz
-mv apache-cassandra-4.1.3 cassandra
-chmod 777 -R cassandra
-chown cassandra:cassandra -R cassandra
-vim /etc/profile
+$ cd /opt/
+$ wget https://dlcdn.apache.org/cassandra/4.1.3/apache-cassandra-4.1.3-bin.tar.gz
+$ tar zxvf apache-cassandra-4.1.3-bin.tar.gz
+$ mv apache-cassandra-4.1.3 cassandra
+$ chmod 777 -R cassandra
+$ chown cassandra:cassandra -R cassandra
+$ vim /etc/profile
 #-----------Copy Paste--------------
 export CASSANDRA_HOME=/opt/cassandra
 export PATH=$PATH:$CASSANDRA_HOME/bin
 #-----------------------------------
-source  /etc/profile
-vim ~/.bashrc
+$ source  /etc/profile
+$ vim ~/.bashrc
 #-------------Copy Paste--------------------
-alias nodetool='/opt/cassandra/bin/nodetool'
-alias cqlsh='/opt/cassandra/bin/cqlsh --request-timeout=10000'
+alias nodetool='/opt/cassandra/bin/nodetool -u cassandra -pw cassandra'
+alias cqlsh='/opt/cassandra/bin/cqlsh --request-timeout=10000 -u cassandra -p cassandra'
 #-------------------------------------------
 source ~/.bashrc
 ```
 # Setting up Cassandra Multi-node Cluster
 ```bash
-pip install cassandra-driver
-vim /opt/cassandra/conf/cassandra.yaml
+$ pip install cassandra-driver
+$ vim /opt/cassandra/conf/cassandra.yaml
 ```
 ```yaml
 cluster_name: 'Softnix-Cluster'
@@ -83,18 +83,18 @@ read_request_timeout_in_ms: 60000ms
 ```
 ## Modify Rack Details
 ```bash
-vim /opt/cassandra/conf/cassandra-rackdc.properties
+$ vim /opt/cassandra/conf/cassandra-rackdc.properties
 #----Edit Here------
 dc=datacenter1
 rc=rack1
 #-------------------
 ```
 ```bash
-rm -rf /opt/cassandra/data/*
+$ rm -rf /opt/cassandra/data/*
 ```
 ## Script to Start services
 ```bash
-vim /etc/systemd/system/cassandra.service
+$ vim /etc/systemd/system/cassandra.service
 #------------Copy Paste-----------------
 [Unit]
 Description=Apache Cassandra database server
@@ -114,13 +114,13 @@ WantedBy=multi-user.target
 ```
 ## Start service (All hosts)
 ```bash
-systemctl daemon-reload
-systemctl start cassandra
-systemctl status cassandra
+$ systemctl daemon-reload
+$ systemctl start cassandra
+$ systemctl status cassandra
 ```
 ## Dead Node Fix
 ```bash
-vim /opt/cassandra/conf/cassandra-env.sh
+$ vim /opt/cassandra/conf/cassandra-env.sh
 #เพิ่มคำสั่งนี้บรรทัดสุดท้าย
 JVM_OPTS="$JVM_OPTS -Dcassandra.replace_address=<Your Host IP Address>"
 ```
@@ -154,8 +154,8 @@ $ /opt/cassandra/bin/kill.sh
 
 Rsync Cassandra จากเครื่องก่อนหน้า
 ```bash
-ssh root@192.168.10.53 #Master IP
-rsync -avh --progress /opt/cassandra root@ip_address_host_to_join:/opt/
+$ ssh root@192.168.10.53 #Master IP
+$ rsync -avh --progress /opt/cassandra root@ip_address_host_to_join:/opt/
 ```
 Config ```vim /opt/cassandra/conf/cassandra.yaml``` ตามด้านล่างนี้
 ```yaml
@@ -168,16 +168,23 @@ seed_provider:
 listen_address: <IP ที่ต้องการเพิ่ม>
 rpc_address: <IP ที่ต้องการเพิ่ม>
 ```
+Config JMX ```vim /opt/cassandra/conf/cassandra-env.sh```
+
+Add User file: ```echo "cassandra cassandra > /etc/cassandra/jmxremote.password"```
+
+```bash
+LOCAL_JMX=no
+```
 Starting service
 ```bash
-systemctl daemon-reload
-systemctl start cassandra
-systemctl status cassandra
+$ systemctl daemon-reload
+$ systemctl start cassandra
+$ systemctl status cassandra
 ```
 ## Remove Node
 ```bash
-ssh root@master_node
-nodetool removenode <host-id>
+$ ssh root@master_node
+$ nodetool removenode <host-id>
 ```
 ## Error Schema Version failure
 ```bash
@@ -187,7 +194,7 @@ drop keyspace <keyspace_name>;
 systemctl stop cassandra
 systemctl start cassandra
 #Repair host (Main Node Only)
-nodetool repair --full
+nodetool repair -full
 nodetool status
 #is Normal
 Schema versions:
