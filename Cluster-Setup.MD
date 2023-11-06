@@ -209,9 +209,11 @@ CREATE KEYSPACE test_db
 ## User Permission
 Config ```/opt/cassandra/bin/cassandra.yaml```
 ```yaml
+
 authenticator: PasswordAuthenticator
 authorizer: org.apache.cassandra.auth.CassandraAuthorizer
 ```
+
 Restart services all hosts after edit ```systemctl stop cassandra``` | ```systemctl start cassandra```
 
 Create and Grant Users ```cqlsh --request-timeout=10000 -u cassandra -p cassandra```
@@ -220,6 +222,13 @@ CREATE USER <some_user> WITH PASSWORD 'password';
 USE <keyspace>;
 GRANT SELECT ON <table_name> TO <some_user>;
 LIST ALL PERMISSIONS OF nook;
+```
+Reload and replicate Schema System Auth
+```sql
+ALTER KEYSPACE system_auth
+    WITH REPLICATION= {
+		'class' : 'NetworkTopologyStrategy',
+                'data_center_name' : 3};
 ```
 Grant Privillage
 
