@@ -230,6 +230,16 @@ ALTER KEYSPACE system_auth
 		'class' : 'NetworkTopologyStrategy',
                 'data_center_name' : 3};
 ```
+```sql
+ALTER KEYSPACE dse_security
+    WITH REPLICATION= {
+		'class' : 'NetworkTopologyStrategy',
+                'data_center_name' : 3};
+```
+```bash
+nodetool repair --full system_auth
+nodetool repair --full dse_security
+```
 Grant Privillage
 
 * ALL PERMISSIONS
