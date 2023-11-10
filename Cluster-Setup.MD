@@ -272,10 +272,19 @@ ON resource_name
 TO role_name
 ```
 ## TrinoDB Connector
-```vim /home/trino/etc/catalog/```
+
+**เหตุผลที่ใช้ Trino เนื่องจาก Trino เป็น Distributed SQL Query Engine โดยคุณสมบัติหลักของ Cassandra ไม่สามารถใช้งาน JOIN TABLE ได้ เลยต้องใช้ Trino มาเป็นตัวกลางในการ Query**
+
+```vim /home/trino/etc/catalog/cassandra.properties```
 ```properties
+#TrinoDB
 connector.name=cassandra
-cassandra.contact-points=<seed host>
+cassandra.contact-points=<seed node>
+cassandra.load-policy.dc-aware.local-dc=dc1
+#PrestoDB
+connector.name=cassandra
+cassandra.contact-points=<seed node>
+cassandra.allow-drop-table=true
 cassandra.load-policy.dc-aware.local-dc=dc1
 ```
 
