@@ -271,5 +271,12 @@ GRANT priviledge
 ON resource_name
 TO role_name
 ```
+## TrinoDB Connector
+```vim /home/trino/etc/catalog/```
+```properties
+connector.name=cassandra
+cassandra.contact-points=<seed host>
+cassandra.load-policy.dc-aware.local-dc=dc1
+```
 
 > Author: Pasit Y. | Last Writed 20231030
