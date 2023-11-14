@@ -1,3 +1,4 @@
+
 # Install Apache Cassandra Cluster
 ## SSH Copy Key (All hosts)
 ```bash
@@ -85,7 +86,7 @@ read_request_timeout_in_ms: 60000ms
 ```bash
 $ vim /opt/cassandra/conf/cassandra-rackdc.properties
 #----Edit Here------
-dc=datacenter1
+dc=dc1
 rc=rack1
 #-------------------
 ```
@@ -184,7 +185,8 @@ $ systemctl status cassandra
 ## Remove Node
 ```bash
 $ ssh root@master_node
-$ nodetool removenode <host-id>
+$ nodetool status #Copy Host-id
+$ nodetool removenode <Host-id>
 ```
 ## Error Schema Version failure
 ```bash
@@ -230,15 +232,8 @@ ALTER KEYSPACE system_auth
 		'class' : 'NetworkTopologyStrategy',
                 'data_center_name' : 3};
 ```
-```sql
-ALTER KEYSPACE dse_security
-    WITH REPLICATION= {
-		'class' : 'NetworkTopologyStrategy',
-                'data_center_name' : 3};
-```
 ```bash
 nodetool repair --full system_auth
-nodetool repair --full dse_security
 ```
 Grant Privillage
 
@@ -271,6 +266,9 @@ GRANT priviledge
 ON resource_name
 TO role_name
 ```
+## Backup and Restore
+[Goto Cassandra Backup & Restore](https://github.com/ezynook/apache-cassandra/blob/main/Backup-Restore.MD)
+
 ## TrinoDB Connector
 
 **เหตุผลที่ใช้ Trino เนื่องจาก Trino เป็น Distributed SQL Query Engine โดยคุณสมบัติหลักของ Cassandra ไม่สามารถใช้งาน JOIN TABLE ได้ เลยต้องใช้ Trino มาเป็นตัวกลางในการ Query**
