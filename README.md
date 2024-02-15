@@ -67,6 +67,18 @@ CREATE TABLE test_db.emp (
    PRIMARY KEY (name, id)) 
 WITH CLUSTERING ORDER BY (id ASC);
 ```
+# Create Table for support Vector Search
+```sql
+CREATE TABLE IF NOT EXISTS test_db.vector (
+  id uuid,
+  commenter text,
+  comment text,
+  comment_vector VECTOR <FLOAT, 5>,
+  created_at timestamp,
+  PRIMARY KEY (id, created_at)
+)
+WITH CLUSTERING ORDER BY (created_at DESC);
+```
 # Insert Data
 
 **สามารถใช้งาน SQL Insert, Update, Delete ได้ตามปกติ**
